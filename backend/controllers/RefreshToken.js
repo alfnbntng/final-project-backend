@@ -1,5 +1,5 @@
-import Users from "../models/UserModel.js";
-import Borrow from "../models/BorrowModel.js" 
+import UserModel from "../models/UserModel.js";
+import BorrowModel from "../models/BorrowModel.js" 
 import Invest from "../models/InvestModel.js";
 import Wallet from "../models/WalletModel.js";
 import Transaction from "../models/TransactionModel.js";
@@ -12,7 +12,7 @@ export const refreshToken = async (req, res) => {
   try { 
     const refreshToken = req.cookies.refreshToken; 
     if (!refreshToken) return res.sendStatus(401); 
-    const user = await Users.findAll({ 
+    const user = await UserModel.findAll({ 
       where: { 
         refresh_token: refreshToken, 
       }, 

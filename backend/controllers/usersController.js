@@ -1,10 +1,10 @@
-import Users from "../models/UserModel.js";
+import UserModel from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export const getUsers = async (req, res) => {
     try {
-        const users = await Users.findAll({
+        const users = await UserModel.findAll({
             attributes: ['id', 'name', 'email', 'contact', 'uid', 'date', 'profile_pic', 'aadhar', 'bankhome', 'bankifsc', 'bank']
         });
         res.json(users);
@@ -19,7 +19,7 @@ export const Register = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     try {
-        await Users.create({
+        await UserModel.create({
             name: name,
             email: email,
             password: hashPassword, 
@@ -40,7 +40,7 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
     try {
-        const user = await Users.findAll({
+        const user = await UserModel.findAll({
             where: {
                 email: req.body.email
             }
@@ -64,7 +64,7 @@ export const Login = async (req, res) => {
         const refreshToken = jwt.sign({ userId, name, email, contact, uid, Date, profile_pic, aadhar, bankhome, bankifsc, bank }, process.env.REFRESH_TOKEN_SECRET, {
             expiresIn: '1d'
         });
-        await Users.update({ refresh_token: refreshToken }, {
+        await UserModel.update({ refresh_token: refreshToken }, {
             where: {
                 id: userId
             }
@@ -82,14 +82,14 @@ export const Login = async (req, res) => {
 export const Logout = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(204);
-    const user = await Users.findAll({
+    const user = await UserModel.findAll({
         where: {
             refresh_token: refreshToken
         }
     });
     if (!user[0]) return res.sendStatus(204);
     const userId = user[0].id;
-    await Users.update({ refresh_token: null }, {
+    await UserModel.update({ refresh_token: null }, {
         where: {
             id: userId
         }

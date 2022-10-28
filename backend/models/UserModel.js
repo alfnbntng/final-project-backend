@@ -3,7 +3,7 @@ import db from "../config/database.js";
 
 const { DataTypes } = Sequelize;
 
-const Users = db.define(
+const User = db.define(
   "user",
   {
     name: {
@@ -52,4 +52,4 @@ const Users = db.define(
   await db.sync();
 })();
 
-export default Users;
+export default User;
